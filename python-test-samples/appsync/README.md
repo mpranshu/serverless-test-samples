@@ -72,7 +72,7 @@ In the [unit test](tests/unit/mock_test.py), all references and calls to the App
 To run the unit test, execute the following
 
 ```shell
-# Run from the project directory serverless-test-samples/python-test-samples/apigw-lambda-dynamodb
+# Run from the project directory serverless-test-samples/python-test-samples/appsync
 # Create and Activate a Python Virtual Environment
 # One-time setup
 
