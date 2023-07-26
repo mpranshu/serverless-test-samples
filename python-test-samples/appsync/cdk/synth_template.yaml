@@ -1,0 +1,105 @@
+Resources:
+  AppSyncGraphQLApi:
+    Type: AWS::AppSync::GraphQLApi
+    Properties:
+      AuthenticationType: API_KEY
+      Name: test-local-resolvers-api
+      XrayEnabled: false
+    Metadata:
+      aws:cdk:path: test-local-resolver-api-stack/AppSyncGraphQLApi
+  AppSyncGraphQLSchema:
+    Type: AWS::AppSync::GraphQLSchema
+    Properties:
+      ApiId: 2b66o56s35bu5ii6fx5vrwkmrq
+      Definition: "
+
+        \                schema {
+
+        \                query: Query
+
+        \                mutation: Mutation
+
+        \                subscription: Subscription
+
+        \                }
+
+
+        \                type Subscription {
+
+        \                inbox(to: String!): Page @aws_subscribe(mutations: [\"page\"])
+
+        \                }
+
+
+        \                type Mutation {
+
+        \                page(body: String!, to: String!): Page!
+
+        \                }
+
+
+        \                type Page {
+
+        \                from: String!
+
+        \                to: String!
+
+        \                body: String!
+
+        \                sentAt: String!
+
+        \                }
+
+
+        \                type Query {
+
+        \                me: String
+
+        \                }
+
+
+        \            "
+    Metadata:
+      aws:cdk:path: test-local-resolver-api-stack/AppSyncGraphQLSchema
+  AppSyncDataSource:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId: 2b66o56s35bu5ii6fx5vrwkmrq
+      Name: TestLocalResolversApiDataSource
+      Type: NONE
+      Description: First data source created with the console.
+    Metadata:
+      aws:cdk:path: test-local-resolver-api-stack/AppSyncDataSource
+  AppSyncApiKey:
+    Type: AWS::AppSync::ApiKey
+    Properties:
+      ApiId: 2b66o56s35bu5ii6fx5vrwkmrq
+      ApiKeyId: da2-qlzy7m6zwfayncndycco3tprle
+      Expires: 1690988400
+    Metadata:
+      aws:cdk:path: test-local-resolver-api-stack/AppSyncApiKey
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Analytics: v2:deflate64:H4sIAAAAAAAA/zPSMzXWM1BMLC/WTU7J1s3JTNKrDi5JTM7WAQrFJxYUFFfmJetVO6fluRclFmQE+jgWZOogeMHJGam5iSABl8SSxOD80qLkVBAPqMo7tbIWxAxKLQYL1+oEVJZk5OfpG+sZGuqZKGYVZ2bqFpXmlWTmpuoFQWgAIugIqY4AAAA=
+    Metadata:
+      aws:cdk:path: test-local-resolver-api-stack/CDKMetadata/Default
+Parameters:
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+Rules:
+  CheckBootstrapVersion:
+    Assertions:
+      - Assert:
+          Fn::Not:
+            - Fn::Contains:
+                - - "1"
+                  - "2"
+                  - "3"
+                  - "4"
+                  - "5"
+                - Ref: BootstrapVersion
+        AssertDescription: CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.
+
